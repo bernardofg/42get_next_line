@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bfantine <bfantine@student.42porto.co      +#+  +:+       +#+        */
+/*   By: bfantine <bfantine@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 10:10:27 by bfantine          #+#    #+#             */
-/*   Updated: 2025/11/06 13:04:19 by bfantine         ###   ########.fr       */
+/*   Updated: 2025/11/06 13:40:21 by bfantine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "get_next_line.h"
 
 static char	*create_stash(int fd, char *stash)
 {
@@ -37,8 +39,8 @@ static char	*create_stash(int fd, char *stash)
 
 static char	*get_line(char *stash)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*line;
 
 	i = 0;
@@ -52,7 +54,10 @@ static char	*get_line(char *stash)
 		return ((void *)0);
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
-		line[i++] = stash[i++];
+	{
+		line[i] = stash[i];
+		i++;
+	}
 	if (stash[i] == '\n')
 		line[i++] = '\n';
 	line[i] = '\0';
@@ -61,8 +66,12 @@ static char	*get_line(char *stash)
 
 static char	*remove_stash_line(char *stash)
 {
-	int	i;
+	int		i;
+	int		j;
 	char	*new_stash;
+
+	i = 0;
+	j = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (!stash[i])
@@ -74,7 +83,7 @@ static char	*remove_stash_line(char *stash)
 	if (!new_stash)
 		return ((void *)0);
 	i++;
-	while (stash[i])	
+	while (stash[i])
 		new_stash[j++] = stash[i++];
 	new_stash[j] = '\0';
 	free(stash);
@@ -84,14 +93,14 @@ static char	*remove_stash_line(char *stash)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*stash[OPEN_MAX];
+	static char	*stash;
 
-	if (fd < 0 ||fd >= OPEN_MAX || BUFFER_SIZE <= 0)
+	if (fd < 0  | BUFFER_SIZE <= 0)
 		return ((void *)0);
-	stash[fd] = create_stash(fd, stash[fd]);
+	stash = create_stash(fd, stash);
 	if (!stash[fd])
 		return ((void *)0);
-	line = get_line(stash[fd]);
-	stash[fd] = remove_stash_line(stash[fd]);
+	line = get_line(stash);
+	stash = remove_stash_line(stash);
 	return (line);
 }

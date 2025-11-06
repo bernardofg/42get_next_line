@@ -1,27 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bfantine <bfantine@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 10:13:01 by bfantine          #+#    #+#             */
-/*   Updated: 2025/11/06 13:36:47 by bfantine         ###   ########.fr       */
+/*   Created: 2025/11/06 13:44:00 by bfantine          #+#    #+#             */
+/*   Updated: 2025/11/06 13:45:29 by bfantine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "get_next_line.h"
 
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <fcntl.h>
+int	main(void)
+{
+	int		fd;
+	char	*line;
+	int		line_count;
 
-char	*get_next_line(int fd);
-
-size_t	ft_strlen(const char *str);
-char	*ft_strjoin(char *s1, char const *s2);
-char	*ft_strchr(const char *s, int c);
-
-#endif
+	fd = open("test1.txt", O_RDONLY);
+	if (fd < 0)
+	{
+		perror("Erro ao abrir o arquivo");
+		return (1);
+	}
+	line_count = 1;
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("Linha %d: %s", line_count, line);
+		free(line);
+		line_count++;
+	}
+	close(fd);
+	return (0);
+}
