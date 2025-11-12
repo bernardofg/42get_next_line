@@ -3,70 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bfantine <bfantine@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: bfantine <bfantine@student.42porto.co      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 09:56:18 by bfantine          #+#    #+#             */
-/*   Updated: 2025/11/06 13:31:35 by bfantine         ###   ########.fr       */
+/*   Created: 2025/11/12 12:51:29 by bfantine          #+#    #+#             */
+/*   Updated: 2025/11/12 14:31:15 by bfantine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(const char *str)
 {
 	size_t	i;
 
 	i = 0;
-	if (!s)
-		return (0);
-	while (s[i])
+	while (str && str[i])
 		i++;
 	return (i);
 }
 
-char	*ft_strjoin(char *s1, char const *s2)
+char	*ft_strjoin(char *s1, const char *s2)
 {
+	size_t	s1len;
+	size_t	s2len;
+	char	*newstr;
 	size_t	i;
-	size_t	sizes1;
-	size_t	sizes2;
-	char	*res;
+	size_t	j;
 
+	s1len = ft_strlen(s1);
+	s2len = ft_strlen(s2);
+	newstr = malloc (s1len + s2len + 1);
+	if (!newstr)
+		return (free(s1), (NULL));
 	i = 0;
-	sizes1 = ft_strlen(s1);
-	sizes2 = ft_strlen(s2);
-	res = malloc(sizes1 + sizes2 +1);
-	if (!res)
-		return ((void *)0);
-	while (s1[i])
+	while (i < s1len)
 	{
-		res[i] = s1[i];
+		newstr[i] = s1[i];
 		i++;
 	}
-	i = 0;
-	while (s2[i])
-	{
-		res[sizes1 + i] = s2[i];
-		i++;
-	}
-	res[sizes1 + i] = '\0';
+	j = 0;
+	while (j < s2len)
+		newstr[i++] = s2[j++];
+	newstr[i] = '\0';
 	free(s1);
-	return (res);
+	return (newstr);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *str, int c)
 {
-	int	i;
-	char	*str;
-
-	str = (char *) s;
-	i = 0;
-	if (!s)
-		return ((void *)0);
-	while (str[i])
+	if (!str)
+		return (NULL);
+	while (*str)
 	{
-		i++;
-		if (str[i] == c)
-			return (&str[i]);
+		if (*str == (char)c)
+			return ((char *)str);
+		str++;
 	}
-	return (0);
+	if (c == '\0')
+		return ((char *)str);
+	return (NULL);
 }
